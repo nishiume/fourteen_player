@@ -193,6 +193,29 @@ h1 {
   cursor: pointer;
 }
 
+.repeat-button {
+  width: 100%;
+  min-height: 48px;
+  margin-top: 10px;
+  border: 1px solid #bdbdbd;
+  border-radius: 12px;
+  background: #fff;
+  color: #171717;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.repeat-button[aria-pressed="true"] {
+  border-color: #171717;
+  background: #171717;
+  color: #fff;
+}
+
+.repeat-button:focus-visible {
+  outline: 3px solid #555;
+  outline-offset: 3px;
+}
+
 .primary-button:disabled,
 .track-button:disabled {
   cursor: not-allowed;
@@ -289,6 +312,10 @@ h1 {
         <span id="play-icon" aria-hidden="true">▶</span>
         <span id="play-label">再生</span>
       </button>
+
+      <button id="repeat-toggle" class="repeat-button" type="button" aria-pressed="false">
+        リピート OFF
+      </button>
     </section>
 
     <div id="install-area" class="install-area" hidden>
@@ -321,6 +348,7 @@ const playPauseButton = document.getElementById("play-pause");
 const playIcon = document.getElementById("play-icon");
 const playLabel = document.getElementById("play-label");
 const playState = document.getElementById("play-state");
+const repeatToggle = document.getElementById("repeat-toggle");
 const currentTrack = document.querySelector(".current-track");
 const status = document.getElementById("status");
 const installArea = document.getElementById("install-area");
@@ -364,6 +392,16 @@ function updateVolume() {
   const userVolume = Number(volume.value) / 100;
   const trackFactor = selectedTrackKey === "chorus" ? CHORUS_VOLUME_FACTOR : 1;
   audio.volume = userVolume * trackFactor;
+}
+
+function updateRepeatUi() {
+  repeatToggle.setAttribute("aria-pressed", String(audio.loop));
+  repeatToggle.textContent = audio.loop ? "リピート ON" : "リピート OFF";
+}
+
+function toggleRepeat() {
+  audio.loop = !audio.loop;
+  updateRepeatUi();
 }
 
 function clearStatus() {
@@ -463,6 +501,7 @@ trackButtons.forEach((button) => {
 });
 
 playPauseButton.addEventListener("click", togglePlayback);
+repeatToggle.addEventListener("click", toggleRepeat);
 volume.addEventListener("input", updateVolume);
 
 seek.addEventListener("pointerdown", () => {
@@ -509,6 +548,7 @@ audio.addEventListener("error", () => {
 
 updateVolume();
 updatePlayUi();
+updateRepeatUi();
 updateTimeline();
 
   </script>
