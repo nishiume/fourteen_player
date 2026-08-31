@@ -4,6 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#ffffff">
+  <meta name="apple-mobile-web-app-title" content="14-fourteen-">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAAEm0lEQVR42u3dP0iUfxzA8d/JnRQSQYZCg0KCi8Et/kEhXJqkGppcysEgF800POGgIDG1CL2OhoYGEYmgRRucHFwCz0DIoUEIiRCxoSIkpH+/QX4/+PHzuez8U/fc6zXe98Tn+dz7nnse79RIeXn5X5CrIiNAQAgIASEgEBACQkAICASEgBAQAgIBISAEhIBAQAgIASEgBAQCQkAICAGBgBAQAkJAICAEhIAQEAgIASEgBISAQEAICAEhIBAQAkJACAgEhIAQEAICASEgBISAQEAICAEhIAQEAkJACAgBgYAQEAJCQCAgBISAEBAICAEhIASEgEBAHLhoPm70sWPH6v8Rj8djsdhOvqqysnJzc/M3bvaTJ0+am5t3fv+RkZHR0VEB7Y2TJ09uFdPQ0FBVVZV30V+6dOmX6nEE2q1YLHbq1KmGhoatbo4fP56/U66oqLh586aXsAN18eLF27dvh2DEkUhkbGyspKTESTS5aG9vb2pqchVGjqduyWTSZTw5DbeoKJVKHT58WEDkoqOjo66uLuRPEg/zPqmuru7v7w//UdYjvS8Xt9FoOp0uLi4O/57m40Z/+PDhxYsXmUxmfn7+9OnT169f/9O2sLOzMx6PF8RTJV82dGVlJZPJLCwszM/PLy8v//jxY+v2+vr6P21Ta2pqenp6gla/fv0ajUYFtO++fPmyuLi4FU0mk1lfX8+LgcZisfv372d5ey6dTl+7dk1A+25iYmJiYiLvBtrT01NTUxO0urS0NDY2FqaAnETvpXg83tnZmeWY2tXV9e3bN1dhbKO4uDidTmc5v7l79+6rV69cxrO9/v7+6urqoNXFxcUHDx6Eb68FtDdqa2s7OjqCVjc3N8P34iWgPXPo0KFUKlVUFDjM4eHh5eXlUO67gPZAMpnM8iHJhYWFhw8fhnXfBbRbjY2Nly9fDlr9/Pnz1atXv3//LiC2UVJSkkqlIpFI0B0GBwdfv34d4gkIaFdu3LhRUVERtPr8+fNHjx6FewICyl1zc3NbW1vQ6sbGRnd397/v2QmI/zhy5Ej2X9q6devWmzdvQj8HAeVoYGDgxIkTQatzc3Pj4+OFMAcB5eLMmTOtra1Bq58+fQrT26UC2mNHjx69d+9e9jPr1dVVAbG9oaGh8vLyoNXZ2dnHjx8XzjQE9GtaWlouXLgQtPrx48fe3t6CGoiAfkFpaemdO3ey3CGZTK6trQmI7Y2MjGT5Gw8zMzNPnz4ttJkIaKfOnz9/9uzZoNX379/39fUV4FgEtFONjY1ZVhOJxLt37wRELp49ezY9PV2Y+x718O/euXPn9uPcOZFIJBKJ/9/e29s7OTnpCISXMARkBAgIASEgBAQCQkDki0iWz0b9XmVlZS9fvjzgbzo1NXXlypV9/RbRaPTt27c7uWde/LMVRyAEhIAQEAICASEgBISA4Kf+3J9E4wiEgEBACAgBISAQEAJCQAgIBISAEBACQkAgIASEgBAQCAgBISAEBAJCQAgIAYGAEBACQkAICASEgBAQAgIBISAEhIBAQAgIASEgEBACQkAICAGBgBAQAkJAICAEhIAQEGT3N9gxBaaKjuqIAAAAAElFTkSuQmCC">
   <title>14-fourteen-</title>
   <style>
 :root {
@@ -203,6 +206,33 @@ h1 {
   font-size: 0.9rem;
 }
 
+.install-area {
+  margin-top: 14px;
+}
+
+.install-button {
+  width: 100%;
+  min-height: 48px;
+  border: 1px solid #bdbdbd;
+  border-radius: 12px;
+  background: #fff;
+  color: #171717;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.install-help {
+  margin: 10px 2px 0;
+  color: #555;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+
+.install-button:focus-visible {
+  outline: 3px solid #555;
+  outline-offset: 3px;
+}
+
 @media (min-width: 600px) {
   .app-shell { padding-top: 36px; }
 
@@ -261,6 +291,11 @@ h1 {
       </button>
     </section>
 
+    <div id="install-area" class="install-area" hidden>
+      <button id="install-app" class="install-button" type="button">ホーム画面に追加</button>
+      <p id="install-help" class="install-help" hidden></p>
+    </div>
+
     <p id="status" class="status" role="status" aria-live="polite"></p>
   </main>
 
@@ -288,10 +323,14 @@ const playLabel = document.getElementById("play-label");
 const playState = document.getElementById("play-state");
 const currentTrack = document.querySelector(".current-track");
 const status = document.getElementById("status");
+const installArea = document.getElementById("install-area");
+const installButton = document.getElementById("install-app");
+const installHelp = document.getElementById("install-help");
 const trackButtons = Array.from(document.querySelectorAll(".track-button"));
 
 let selectedTrackKey = "chorus";
 let isSeeking = false;
+let deferredInstallPrompt = null;
 
 function formatTime(value) {
   if (!Number.isFinite(value) || value < 0) return "--:--";
@@ -375,6 +414,49 @@ function selectTrack(trackKey) {
     button.setAttribute("aria-pressed", String(selected));
   });
 }
+
+function isStandalone() {
+  return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone === true;
+}
+
+function isIos() {
+  return /iphone|ipad|ipod/i.test(navigator.userAgent);
+}
+
+function showIosInstallHelp() {
+  installArea.hidden = false;
+  installHelp.hidden = true;
+}
+
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  if (!isStandalone()) installArea.hidden = false;
+});
+
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  installArea.hidden = true;
+  installHelp.hidden = true;
+});
+
+installButton.addEventListener("click", async () => {
+  installHelp.hidden = true;
+
+  if (deferredInstallPrompt) {
+    await deferredInstallPrompt.prompt();
+    deferredInstallPrompt = null;
+    installArea.hidden = true;
+    return;
+  }
+
+  if (isIos()) {
+    installHelp.textContent = "Safariの共有ボタンを開き、「ホーム画面に追加」→「追加」を選んでください。";
+    installHelp.hidden = false;
+  }
+});
+
+if (!isStandalone() && isIos()) showIosInstallHelp();
 
 trackButtons.forEach((button) => {
   button.addEventListener("click", () => selectTrack(button.dataset.track));
