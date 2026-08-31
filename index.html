@@ -20,8 +20,8 @@
   --text: #f7f7f7;
   --muted: #a8a8b0;
   --line: #36363d;
-  --accent: #8b7cff;
-  --accent-strong: #a69cff;
+  --accent: #43C6C8;
+  --accent-strong: #43C6C8;
   --danger: #ff8d82;
 }
 
@@ -99,7 +99,7 @@ button, input { -webkit-tap-highlight-color: transparent; }
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(circle at 28% 22%, rgba(139,124,255,0.94), rgba(71,57,164,0.72) 34%, rgba(24,24,29,0.96) 72%),
+    radial-gradient(circle at 28% 22%, rgba(77,163,255,0.94), rgba(77,163,255,0.58) 34%, rgba(24,24,29,0.96) 72%),
     #202024;
   border: 1px solid rgba(255,255,255,0.08);
 }
@@ -227,11 +227,13 @@ button, input { -webkit-tap-highlight-color: transparent; }
 
 .playback-zone { position: relative; margin-top: 17px; }
 .playback-controls {
+  position: relative;
+  width: 204px;
+  margin: 0 auto;
   display: grid;
   grid-template-columns: 54px 76px 54px;
-  justify-content: center;
   align-items: center;
-  gap: 15px;
+  gap: 10px;
 }
 .icon-button {
   display: inline-grid;
@@ -271,15 +273,13 @@ button, input { -webkit-tap-highlight-color: transparent; }
 .play-button .pause-icon { display: none; }
 .play-button.is-playing .play-icon { display: none; }
 .play-button.is-playing .pause-icon { display: block; }
-.repeat-row {
-  display: flex;
-  justify-content: center;
-  margin-top: 8px;
-}
 .repeat-button {
-  position: relative;
-  width: 48px;
-  height: 48px;
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
   border: 0;
   border-radius: 50%;
   background: transparent;
@@ -310,14 +310,14 @@ button, input { -webkit-tap-highlight-color: transparent; }
 
 .volume-control {
   display: grid;
-  grid-template-columns: 24px minmax(0,1fr) 24px;
+  grid-template-columns: 42px minmax(0,1fr) 42px;
   align-items: center;
   gap: 9px;
   margin: 15px auto 0;
   max-width: 440px;
 }
 .volume-icon { color: #8d8d95; display: grid; place-items: center; }
-.volume-icon svg { width: 20px; height: 20px; }
+.volume-icon svg { width: 40px; height: 40px; }
 #volume { height: 28px; }
 
 .install-area { margin-top: 25px; text-align: center; }
@@ -431,9 +431,7 @@ button:disabled { cursor: not-allowed; opacity: 0.45; }
             <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M23.8 8.4V3.8l5.4 5.4-5.4 5.4v-4.3A10.2 10.2 0 1 0 26.2 17h2.6a12.8 12.8 0 1 1-5-8.6Z" fill="currentColor"/></svg>
             <span class="skip-number" aria-hidden="true">10</span>
           </button>
-        </div>
 
-        <div class="repeat-row">
           <button id="repeat-toggle" class="repeat-button" type="button" aria-pressed="false" aria-label="1曲リピート OFF" title="1曲リピート">
             <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 8.5h16.4L20.6 5.7 22.3 4 28 9.7l-5.7 5.7-1.7-1.7 2.8-2.8H7a3 3 0 0 0-3 3v1H1.6v-1A5.4 5.4 0 0 1 7 8.5Zm18 15H8.6l2.8 2.8L9.7 28 4 22.3l5.7-5.7 1.7 1.7-2.8 2.8H25a3 3 0 0 0 3-3v-1h2.4v1a5.4 5.4 0 0 1-5.4 5.4Z" fill="currentColor"/></svg>
           </button>
