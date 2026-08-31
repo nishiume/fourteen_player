@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <title>14-fourteen-</title>
+  <style>
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif;
+  color: #171717;
+  background: #f4f4f4;
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+
+html { min-height: 100%; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #f4f4f4;
+}
+
+button,
+input { font: inherit; }
+
+button { touch-action: manipulation; }
+
+.app-shell {
+  width: min(100%, 760px);
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: max(20px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(28px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+}
+
+.app-header { margin-bottom: 18px; }
+
+h1,
+h2 { margin: 0; }
+
+h1 {
+  font-size: clamp(1.75rem, 7vw, 2.5rem);
+  line-height: 1.1;
+}
+
+.panel {
+  padding: 18px;
+  margin-bottom: 14px;
+  background: #fff;
+  border: 1px solid #dedede;
+  border-radius: 16px;
+}
+
+.panel > h2 {
+  margin-bottom: 14px;
+  font-size: 1rem;
+}
+
+.track-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.track-button {
+  min-height: 52px;
+  padding: 10px 12px;
+  border: 1px solid #bdbdbd;
+  border-radius: 12px;
+  background: #fff;
+  color: #171717;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.track-button-wide { grid-column: 1 / -1; }
+
+.track-button.is-selected {
+  border-color: #171717;
+  background: #171717;
+  color: #fff;
+}
+
+.track-button:focus-visible,
+.primary-button:focus-visible,
+#seek:focus-visible,
+#volume:focus-visible {
+  outline: 3px solid #555;
+  outline-offset: 3px;
+}
+
+.player-panel { padding-bottom: 20px; }
+
+.player-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.current-track {
+  font-size: clamp(1.4rem, 6vw, 2rem);
+}
+
+.play-state {
+  flex: 0 0 auto;
+  min-width: 4.5em;
+  padding: 6px 9px;
+  border-radius: 999px;
+  background: #efefef;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.timeline { margin-top: 28px; }
+
+.timeline label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+#seek {
+  width: 100%;
+  min-height: 32px;
+  margin: 0;
+  accent-color: #171717;
+  cursor: pointer;
+}
+
+.time-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2px;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+  color: #555;
+}
+
+.time-row span {
+  width: 5ch;
+  white-space: nowrap;
+}
+
+.time-row span:last-child { text-align: right; }
+
+.volume-control { margin-top: 22px; }
+
+.volume-control label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+#volume {
+  width: 100%;
+  min-height: 32px;
+  margin: 0;
+  accent-color: #171717;
+  cursor: pointer;
+}
+
+.primary-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 58px;
+  margin-top: 22px;
+  border: 0;
+  border-radius: 14px;
+  background: #171717;
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.primary-button:disabled,
+.track-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.status {
+  min-height: 1.4em;
+  margin: 4px 4px 0;
+  color: #8a1f11;
+  font-size: 0.9rem;
+}
+
+@media (min-width: 600px) {
+  .app-shell { padding-top: 36px; }
+
+  .track-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+
+  .track-button-wide { grid-column: auto; }
+
+  .panel { padding: 22px; }
+}
+
+  </style>
+</head>
+<body>
+  <main class="app-shell" aria-labelledby="app-title">
+    <header class="app-header">
+      <h1 id="app-title">14-fourteen-</h1>
+    </header>
+
+    <section class="panel">
+      <div class="track-grid" id="track-grid" role="group" aria-label="再生する音源">
+        <button class="track-button is-selected" type="button" data-track="chorus" aria-pressed="true">合唱</button>
+        <button class="track-button" type="button" data-track="soprano" aria-pressed="false">ソプラノ</button>
+        <button class="track-button" type="button" data-track="alto" aria-pressed="false">アルト</button>
+        <button class="track-button" type="button" data-track="tenor" aria-pressed="false">テノール</button>
+        <button class="track-button track-button-wide" type="button" data-track="piano" aria-pressed="false">カラピアノ</button>
+      </div>
+    </section>
+
+    <section class="panel player-panel" aria-labelledby="player-heading">
+      <div class="player-title-row">
+        <div>
+          <h2 id="player-heading" class="current-track">合唱</h2>
+        </div>
+        <output id="play-state" class="play-state" aria-live="polite">停止中</output>
+      </div>
+
+      <audio id="audio" preload="metadata" src="chorus.mp3"></audio>
+
+      <div class="timeline">
+        <label for="seek">再生位置</label>
+        <input id="seek" type="range" min="0" max="1000" value="0" step="1" aria-label="再生位置">
+        <div class="time-row" aria-label="再生時間">
+          <span id="current-time">0:00</span>
+          <span id="duration">--:--</span>
+        </div>
+      </div>
+
+      <div class="volume-control">
+        <label for="volume">音量</label>
+        <input id="volume" type="range" min="0" max="100" value="50" step="1" aria-label="音量">
+      </div>
+
+      <button id="play-pause" class="primary-button" type="button" aria-label="再生">
+        <span id="play-icon" aria-hidden="true">▶</span>
+        <span id="play-label">再生</span>
+      </button>
+    </section>
+
+    <p id="status" class="status" role="status" aria-live="polite"></p>
+  </main>
+
+  <script>
+"use strict";
+
+const CHORUS_VOLUME_FACTOR = 0.586;
+
+const TRACKS = Object.freeze({
+  chorus: { label: "合唱", src: "chorus.mp3" },
+  soprano: { label: "ソプラノ", src: "soprano.mp3" },
+  alto: { label: "アルト", src: "alto.mp3" },
+  tenor: { label: "テノール", src: "tenor.mp3" },
+  piano: { label: "カラピアノ", src: "piano.mp3" }
+});
+
+const audio = document.getElementById("audio");
+const seek = document.getElementById("seek");
+const currentTimeEl = document.getElementById("current-time");
+const volume = document.getElementById("volume");
+const durationEl = document.getElementById("duration");
+const playPauseButton = document.getElementById("play-pause");
+const playIcon = document.getElementById("play-icon");
+const playLabel = document.getElementById("play-label");
+const playState = document.getElementById("play-state");
+const currentTrack = document.querySelector(".current-track");
+const status = document.getElementById("status");
+const trackButtons = Array.from(document.querySelectorAll(".track-button"));
+
+let selectedTrackKey = "chorus";
+let isSeeking = false;
+
+function formatTime(value) {
+  if (!Number.isFinite(value) || value < 0) return "--:--";
+  const totalSeconds = Math.floor(value);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}:${String(seconds).padStart(2, "0")}`;
+}
+
+function updatePlayUi() {
+  const isPlaying = !audio.paused && !audio.ended;
+  playIcon.textContent = isPlaying ? "Ⅱ" : "▶";
+  playLabel.textContent = isPlaying ? "一時停止" : "再生";
+  playPauseButton.setAttribute("aria-label", isPlaying ? "一時停止" : "再生");
+  playState.textContent = isPlaying ? "再生中" : "停止中";
+}
+
+function updateTimeline() {
+  const duration = audio.duration;
+  const current = audio.currentTime;
+
+  currentTimeEl.textContent = formatTime(current);
+  durationEl.textContent = formatTime(duration);
+
+  if (!isSeeking && Number.isFinite(duration) && duration > 0) {
+    seek.value = String(Math.round((current / duration) * 1000));
+  }
+}
+
+function updateVolume() {
+  const userVolume = Number(volume.value) / 100;
+  const trackFactor = selectedTrackKey === "chorus" ? CHORUS_VOLUME_FACTOR : 1;
+  audio.volume = userVolume * trackFactor;
+}
+
+function clearStatus() {
+  status.textContent = "";
+}
+
+function setStatus(message) {
+  status.textContent = message;
+}
+
+async function togglePlayback() {
+  clearStatus();
+
+  if (!audio.paused && !audio.ended) {
+    audio.pause();
+    return;
+  }
+
+  try {
+    await audio.play();
+  } catch (error) {
+    setStatus("再生を開始できませんでした。もう一度再生ボタンを押してください。");
+    updatePlayUi();
+  }
+}
+
+function selectTrack(trackKey) {
+  if (!(trackKey in TRACKS) || trackKey === selectedTrackKey) return;
+
+  const track = TRACKS[trackKey];
+  selectedTrackKey = trackKey;
+
+  audio.pause();
+  audio.src = track.src;
+  audio.load();
+  updateVolume();
+
+  currentTrack.textContent = track.label;
+  seek.value = "0";
+  currentTimeEl.textContent = "0:00";
+  durationEl.textContent = "--:--";
+  clearStatus();
+  updatePlayUi();
+
+  trackButtons.forEach((button) => {
+    const selected = button.dataset.track === trackKey;
+    button.classList.toggle("is-selected", selected);
+    button.setAttribute("aria-pressed", String(selected));
+  });
+}
+
+trackButtons.forEach((button) => {
+  button.addEventListener("click", () => selectTrack(button.dataset.track));
+});
+
+playPauseButton.addEventListener("click", togglePlayback);
+volume.addEventListener("input", updateVolume);
+
+seek.addEventListener("pointerdown", () => {
+  isSeeking = true;
+});
+
+seek.addEventListener("input", () => {
+  const duration = audio.duration;
+  if (!Number.isFinite(duration) || duration <= 0) return;
+  const previewTime = (Number(seek.value) / 1000) * duration;
+  currentTimeEl.textContent = formatTime(previewTime);
+});
+
+seek.addEventListener("change", () => {
+  const duration = audio.duration;
+  if (Number.isFinite(duration) && duration > 0) {
+    audio.currentTime = (Number(seek.value) / 1000) * duration;
+  }
+  isSeeking = false;
+  updateTimeline();
+});
+
+seek.addEventListener("pointerup", () => {
+  isSeeking = false;
+});
+
+seek.addEventListener("pointercancel", () => {
+  isSeeking = false;
+});
+
+audio.addEventListener("loadedmetadata", updateTimeline);
+audio.addEventListener("durationchange", updateTimeline);
+audio.addEventListener("timeupdate", updateTimeline);
+audio.addEventListener("play", updatePlayUi);
+audio.addEventListener("pause", updatePlayUi);
+audio.addEventListener("ended", () => {
+  updatePlayUi();
+  updateTimeline();
+});
+audio.addEventListener("error", () => {
+  setStatus("音源を読み込めませんでした。");
+  updatePlayUi();
+});
+
+updateVolume();
+updatePlayUi();
+updateTimeline();
+
+  </script>
+</body>
+</html>
