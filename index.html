@@ -62,9 +62,8 @@ button, input { -webkit-tap-highlight-color: transparent; }
 
 .track-picker { margin-bottom: 22px; }
 .track-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 8px;
 }
 .track-button {
@@ -81,6 +80,11 @@ button, input { -webkit-tap-highlight-color: transparent; }
   cursor: pointer;
   transition: background-color 120ms ease, border-color 120ms ease, color 120ms ease;
 }
+.track-button[data-track="soprano"],
+.track-button[data-track="alto"],
+.track-button[data-track="tenor"] { grid-column: span 2; }
+.track-button[data-track="chorus"],
+.track-button[data-track="piano"] { grid-column: span 3; }
 .track-button[data-track="piano"] { font-size: 0.86rem; }
 .track-button.is-selected {
   border-color: var(--accent);
@@ -383,10 +387,10 @@ button:disabled { cursor: not-allowed; opacity: 0.45; }
 
     <section class="track-picker" aria-label="音源選択">
       <div class="track-grid" id="track-grid" role="group" aria-label="再生する音源">
-        <button class="track-button is-selected" type="button" data-track="chorus" aria-pressed="true">合唱</button>
         <button class="track-button" type="button" data-track="soprano" aria-pressed="false">ソプラノ</button>
         <button class="track-button" type="button" data-track="alto" aria-pressed="false">アルト</button>
-        <button class="track-button" type="button" data-track="tenor" aria-pressed="false">テノール</button>
+        <button class="track-button" type="button" data-track="tenor" aria-pressed="false">テナー</button>
+        <button class="track-button is-selected" type="button" data-track="chorus" aria-pressed="true">合唱</button>
         <button class="track-button" type="button" data-track="piano" aria-pressed="false">カラピアノ</button>
       </div>
     </section>
@@ -463,12 +467,13 @@ button:disabled { cursor: not-allowed; opacity: 0.45; }
 
 const CHORUS_VOLUME_FACTOR = 0.586;
 const SKIP_SECONDS = 10;
+const SETTINGS_STORAGE_KEY = "fourteen-player-settings-v1";
 
 const TRACKS = Object.freeze({
   chorus: { label: "合唱", src: "chorus.mp3" },
   soprano: { label: "ソプラノ", src: "soprano.mp3" },
   alto: { label: "アルト", src: "alto.mp3" },
-  tenor: { label: "テノール", src: "tenor.mp3" },
+  tenor: { label: "テナー", src: "tenor.mp3" },
   piano: { label: "カラピアノ", src: "piano.mp3" }
 });
 
@@ -492,6 +497,45 @@ const trackButtons = Array.from(document.querySelectorAll(".track-button"));
 let selectedTrackKey = "chorus";
 let isSeeking = false;
 let deferredInstallPrompt = null;
+
+function readSavedSettings() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(SETTINGS_STORAGE_KEY) || "null");
+    if (!saved || typeof saved !== "object") return null;
+    return saved;
+  } catch (error) {
+    return null;
+  }
+}
+
+function saveSettings() {
+  try {
+    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify({
+      track: selectedTrackKey,
+      volume: Number(volume.value),
+      repeat: audio.loop
+    }));
+  } catch (error) {
+    // 保存できない環境でも再生機能は継続する。
+  }
+}
+
+function restoreSavedSettings() {
+  const saved = readSavedSettings();
+  if (!saved) return;
+
+  if (typeof saved.volume === "number" && Number.isFinite(saved.volume)) {
+    volume.value = String(Math.min(100, Math.max(0, Math.round(saved.volume))));
+  }
+
+  if (typeof saved.repeat === "boolean") {
+    audio.loop = saved.repeat;
+  }
+
+  if (typeof saved.track === "string" && saved.track in TRACKS && saved.track !== selectedTrackKey) {
+    selectTrack(saved.track, false);
+  }
+}
 
 function formatTime(value) {
   if (!Number.isFinite(value) || value < 0) return "--:--";
@@ -546,6 +590,7 @@ function updateRepeatUi() {
 function toggleRepeat() {
   audio.loop = !audio.loop;
   updateRepeatUi();
+  saveSettings();
 }
 
 function clearStatus() { status.textContent = ""; }
@@ -574,7 +619,7 @@ function skipBy(seconds) {
   updateTimeline();
 }
 
-function selectTrack(trackKey) {
+function selectTrack(trackKey, persist = true) {
   if (!(trackKey in TRACKS) || trackKey === selectedTrackKey) return;
 
   const track = TRACKS[trackKey];
@@ -598,6 +643,8 @@ function selectTrack(trackKey) {
     button.classList.toggle("is-selected", selected);
     button.setAttribute("aria-pressed", String(selected));
   });
+
+  if (persist) saveSettings();
 }
 
 function isStandalone() {
@@ -651,7 +698,10 @@ playPauseButton.addEventListener("click", togglePlayback);
 repeatToggle.addEventListener("click", toggleRepeat);
 skipBackButton.addEventListener("click", () => skipBy(-SKIP_SECONDS));
 skipForwardButton.addEventListener("click", () => skipBy(SKIP_SECONDS));
-volume.addEventListener("input", updateVolume);
+volume.addEventListener("input", () => {
+  updateVolume();
+  saveSettings();
+});
 
 seek.addEventListener("pointerdown", () => { isSeeking = true; });
 
@@ -687,6 +737,7 @@ audio.addEventListener("error", () => {
   updatePlayUi();
 });
 
+restoreSavedSettings();
 setRangeProgress(seek, 0);
 updateVolume();
 updatePlayUi();
