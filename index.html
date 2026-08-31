@@ -53,11 +53,31 @@ button, input { -webkit-tap-highlight-color: transparent; }
 
 .app-header { text-align: center; margin-bottom: 18px; }
 .app-header h1 {
+  display: inline-block;
+  position: relative;
   margin: 0;
-  font-size: 0.96rem;
-  font-weight: 750;
-  letter-spacing: 0.04em;
+  padding-right: 0.4em;
+  font-family: "Snell Roundhand", "Segoe Script", "Bradley Hand", "Apple Chancery", cursive;
+  font-size: 1.22rem;
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.05;
+  letter-spacing: 0.005em;
   color: #e7e7ea;
+  transform: skewX(-4deg);
+}
+.app-header h1::after {
+  content: "";
+  position: absolute;
+  right: -0.28em;
+  bottom: 0.08em;
+  width: 1.35em;
+  height: 1px;
+  background: currentColor;
+  border-radius: 999px;
+  transform: rotate(-7deg);
+  transform-origin: left center;
+  opacity: 0.9;
 }
 
 .track-picker { margin-bottom: 22px; }
