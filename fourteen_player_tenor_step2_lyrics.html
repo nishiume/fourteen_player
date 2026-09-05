@@ -20,8 +20,8 @@
   --text: #f7f7f7;
   --muted: #a8a8b0;
   --line: #36363d;
-  --accent: #67c7f2;
-  --accent-strong: #9be0ff;
+  --accent: #8b7cff;
+  --accent-strong: #a69cff;
   --danger: #ff8d82;
 }
 
@@ -128,14 +128,6 @@ button, input { -webkit-tap-highlight-color: transparent; }
 }
 .lyric-verse { margin: 0; }
 .lyric-verse[hidden] { display: none; }
-.lyric-slots {
-  display: grid;
-  gap: 0.35rem;
-}
-.lyric-slot {
-  position: relative;
-  min-height: 3.6em;
-}
 .verse-label {
   margin: 0 0 0.8rem;
   color: var(--muted);
@@ -144,29 +136,17 @@ button, input { -webkit-tap-highlight-color: transparent; }
   letter-spacing: 0.08em;
 }
 .lyric-line {
-  position: absolute;
-  inset: 0;
-  margin: 0;
+  margin: 0.7em 0;
   color: var(--muted);
   font-size: clamp(1.18rem, 5.2vw, 1.55rem);
   font-weight: 650;
-  line-height: 1.55;
-  opacity: 0;
-  transform: translateY(8px);
-  pointer-events: none;
-  transition: opacity 1120ms ease, transform 1120ms ease, color 140ms ease, font-weight 140ms ease, background-color 140ms ease;
-}
-.lyric-line.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-#v2-line02 {
-  font-size: calc(clamp(1.18rem, 5.2vw, 1.55rem) * 0.9);
+  line-height: 1.65;
+  transition: color 140ms ease, font-weight 140ms ease, background-color 140ms ease;
 }
 .lyric-line.is-active {
   color: var(--text);
   font-weight: 900;
-  background: rgba(103, 199, 242, 0.14);
+  background: rgba(139, 124, 255, 0.14);
   border-radius: 10px;
 }
 
@@ -231,7 +211,7 @@ button, input { -webkit-tap-highlight-color: transparent; }
 .playback-zone { position: relative; margin-top: 17px; }
 .playback-controls {
   display: grid;
-  grid-template-columns: 81px 76px 81px;
+  grid-template-columns: 54px 76px 54px;
   justify-content: center;
   align-items: center;
   gap: 15px;
@@ -248,15 +228,15 @@ button, input { -webkit-tap-highlight-color: transparent; }
   color: #e7e7eb;
   cursor: pointer;
 }
-.skip-button { position: relative; width: 81px; height: 81px; }
-.skip-button svg { width: 46px; height: 46px; }
+.skip-button { position: relative; width: 54px; height: 54px; }
+.skip-button svg { width: 31px; height: 31px; }
 .skip-number {
   position: absolute;
   inset: 0;
   display: grid;
   place-items: center;
   padding-top: 1px;
-  font-size: 0.99rem;
+  font-size: 0.66rem;
   font-weight: 820;
 }
 .play-button {
@@ -290,7 +270,26 @@ button, input { -webkit-tap-highlight-color: transparent; }
   cursor: pointer;
 }
 .repeat-button svg { width: 25px; height: 25px; }
+.repeat-button::after {
+  content: "1";
+  position: absolute;
+  right: 5px;
+  top: 3px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--accent);
+  color: #111114;
+  font-size: 0.61rem;
+  font-weight: 900;
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 120ms ease, transform 120ms ease;
+}
 .repeat-button[aria-pressed="true"] { color: var(--accent-strong); }
+.repeat-button[aria-pressed="true"]::after { opacity: 1; transform: scale(1); }
 
 .volume-control {
   display: grid;
@@ -383,66 +382,45 @@ button:disabled { cursor: not-allowed; opacity: 0.45; }
       <section id="lyrics-stage" class="lyrics-stage" aria-label="歌詞表示" data-sync-track="tenor">
         <section class="lyric-verse" data-verse="1" aria-label="1番">
           <h3 class="verse-label">1番</h3>
-          <div class="lyric-slots">
-            <div class="lyric-slot">
-              <p class="lyric-line" id="v1-line01">14-fourteen-</p>
-              <p class="lyric-line" id="v1-line03">14-fourteen-</p>
-              <p class="lyric-line" id="v1-line05">花ひらくときを信じてる</p>
-              <p class="lyric-line" id="v1-line07">Uh 背伸びした 青い空の向こう側で</p>
-              <p class="lyric-line" id="v1-line09">点数にならない</p>
-              <p class="lyric-line" id="v1-line11">Uhーーーーー</p>
-            </div>
-            <div class="lyric-slot">
-              <p class="lyric-line" id="v1-line02">夢のつぼみが心のどこかで震えてる</p>
-              <p class="lyric-line" id="v1-line04">季節を越えて</p>
-              <p class="lyric-line" id="v1-line06">ああ 変わりたくて</p>
-              <p class="lyric-line" id="v1-line08">手をふるのは誰だろう</p>
-              <p class="lyric-line" id="v1-line10">この胸のときめき</p>
-              <p class="lyric-line" id="v1-line12">ひとつだけの音楽を奏でてる</p>
-            </div>
-          </div>
+          <p class="lyric-line" id="v1-line01">14-fourteen-</p>
+          <p class="lyric-line" id="v1-line02">夢のつぼみが心のどこかで震えてる</p>
+          <p class="lyric-line" id="v1-line03">14-fourteen-</p>
+          <p class="lyric-line" id="v1-line04">季節を越えて 花ひらくときを信じてる</p>
+          <p class="lyric-line" id="v1-line05">ああ 変わりたくて 背伸びした</p>
+          <p class="lyric-line" id="v1-line06">青い空の向こう側で</p>
+          <p class="lyric-line" id="v1-line07">手をふるのは誰だろう</p>
+          <p class="lyric-line" id="v1-line08">点数にならない この胸のときめき</p>
+          <p class="lyric-line" id="v1-line09">Uhーーーーーーーー</p>
+          <p class="lyric-line" id="v1-line10">ひとつだけの音楽を奏でてる</p>
         </section>
 
         <section class="lyric-verse" data-verse="2" aria-label="2番" hidden>
           <h3 class="verse-label">2番</h3>
-          <div class="lyric-slots">
-            <div class="lyric-slot">
-              <p class="lyric-line" id="v2-line01">14-fourteen-</p>
-              <p class="lyric-line" id="v2-line03">14-fourteen-</p>
-              <p class="lyric-line" id="v2-line05">今日まで歩いて来れたから</p>
-              <p class="lyric-line" id="v2-line07">Uh ラララララ</p>
-              <p class="lyric-line" id="v2-line09">言葉じゃない「ありがとう」を</p>
-              <p class="lyric-line" id="v2-line11">明日を飾るメロディ</p>
-              <p class="lyric-line" id="v2-line13">蒼い翼に変われ</p>
-              <p class="lyric-line" id="v2-line15">変わりたくて ラー</p>
-              <p class="lyric-line" id="v2-line17">夢のつぼみが 心のどこかで震えてる</p>
-              <p class="lyric-line" id="v2-line19">季節を越えて もうすぐ もうすぐ</p>
-              <p class="lyric-line" id="v2-line21">ありのままの僕を</p>
-              <p class="lyric-line" id="v2-line23">Uhーーーーー 真ん中で</p>
-              <p class="lyric-line" id="v2-line25">音楽が生まれている</p>
-              <p class="lyric-line" id="v2-line27">走り出す</p>
-            </div>
-            <div class="lyric-slot">
-              <p class="lyric-line" id="v2-line02">期待通りの素直な音色じゃないけれど</p>
-              <p class="lyric-line" id="v2-line04">あなたの愛で</p>
-              <p class="lyric-line" id="v2-line06">ああ 出会いたくて</p>
-              <p class="lyric-line" id="v2-line08">そしていつか 伝えるんだ</p>
-              <p class="lyric-line" id="v2-line10">寂しさも不安も</p>
-              <p class="lyric-line" id="v2-line12">Uhーーーーー 響き合って</p>
-              <p class="lyric-line" id="v2-line14">ララララララララ</p>
-              <p class="lyric-line" id="v2-line16">14-fourteen-</p>
-              <p class="lyric-line" id="v2-line18">14-fourteen-</p>
-              <p class="lyric-line" id="v2-line20">Ahーーーーー</p>
-              <p class="lyric-line" id="v2-line22">抱きしめて歌おう</p>
-              <p class="lyric-line" id="v2-line24">ひとつだけの</p>
-              <p class="lyric-line" id="v2-line26">14-fourteen-</p>
-              <p class="lyric-line" id="v2-line28">ララララララララ</p>
-            </div>
-          </div>
+          <p class="lyric-line" id="v2-line01">14-fourteen-</p>
+          <p class="lyric-line" id="v2-line02">期待通りの素直な音色じゃないけれど</p>
+          <p class="lyric-line" id="v2-line03">14-fourteen-</p>
+          <p class="lyric-line" id="v2-line04">あなたの愛で 今日まで歩いて来れたから</p>
+          <p class="lyric-line" id="v2-line05">ああ 出会いたくて ラララララー</p>
+          <p class="lyric-line" id="v2-line06">そしていつか 伝えるんだ</p>
+          <p class="lyric-line" id="v2-line07">言葉じゃない「ありがとう」を</p>
+          <p class="lyric-line" id="v2-line08">寂しさも不安も 明日を飾るメロディー</p>
+          <p class="lyric-line" id="v2-line09">Uhーーーーーーー 響き合って</p>
+          <p class="lyric-line" id="v2-line10">蒼い翼に変われ</p>
+          <p class="lyric-line" id="v2-line11">ララララララララー</p>
+          <p class="lyric-line" id="v2-line12">14-fourteen-</p>
+          <p class="lyric-line" id="v2-line13">夢のつぼみが 心のどこかで震えてる</p>
+          <p class="lyric-line" id="v2-line14">14-fourteen-</p>
+          <p class="lyric-line" id="v2-line15">季節を越えて もうすぐ もうすぐ・・・</p>
+          <p class="lyric-line" id="v2-line16">Ah ーーーーーーーー</p>
+          <p class="lyric-line" id="v2-line17">ありのままの僕を 抱きしめて歌おう</p>
+          <p class="lyric-line" id="v2-line18">Uhーーーーーーー 真ん中で</p>
+          <p class="lyric-line" id="v2-line19">ひとつだけの音楽が生まれてる</p>
+          <p class="lyric-line" id="v2-line20">14-fourteen- 走り出す…</p>
+          <p class="lyric-line" id="v2-line21">ラララララララ Ahーーーーーー</p>
         </section>
       </section>
 
-      <audio id="audio" preload="metadata" src="tenor-boost.mp3"></audio>
+      <audio id="audio" preload="metadata" src="tenor.mp3"></audio>
 
       <div class="timeline">
         <label class="sr-only" for="seek">再生位置</label>
@@ -505,55 +483,14 @@ const CHORUS_VOLUME_FACTOR = 0.586;
 const SKIP_SECONDS = 10;
 const LYRIC_SYNC_TRACK = "tenor";
 
-// テナー歌詞。時刻は音源先頭からの秒数。
-const TENOR_TIMINGS = Object.freeze([
-  { target: "v1-line01", start: 12, end: 15 },
-  { target: "v1-line02", start: 15, end: 25 },
-  { target: "v1-line03", start: 25, end: 27 },
-  { target: "v1-line04", start: 27, end: 30 },
-  { target: "v1-line05", start: 30, end: 39 },
-  { target: "v1-line06", start: 39, end: 44 },
-  { target: "v1-line07", start: 44, end: 55 },
-  { target: "v1-line08", start: 55, end: 61 },
-  { target: "v1-line09", start: 61, end: 67 },
-  { target: "v1-line10", start: 67, end: 73 },
-  { target: "v1-line11", start: 73, end: 79 },
-  { target: "v1-line12", start: 79, end: 87 },
-  { target: "v2-line01", start: 90, end: 92 },
-  { target: "v2-line02", start: 92, end: 102 },
-  { target: "v2-line03", start: 102, end: 104 },
-  { target: "v2-line04", start: 104, end: 108 },
-  { target: "v2-line05", start: 108, end: 117 },
-  { target: "v2-line06", start: 117, end: 122 },
-  { target: "v2-line07", start: 122, end: 126 },
-  { target: "v2-line08", start: 126, end: 132 },
-  { target: "v2-line09", start: 132, end: 138 },
-  { target: "v2-line10", start: 138, end: 144 },
-  { target: "v2-line11", start: 144, end: 151 },
-  { target: "v2-line12", start: 151, end: 160 },
-  { target: "v2-line13", start: 160, end: 166 },
-  { target: "v2-line14", start: 175, end: 182 },
-  { target: "v2-line15", start: 182, end: 186 },
-  { target: "v2-line16", start: 186, end: 188 },
-  { target: "v2-line17", start: 188, end: 198 },
-  { target: "v2-line18", start: 198, end: 200 },
-  { target: "v2-line19", start: 200, end: 208 },
-  { target: "v2-line20", start: 208, end: 213 },
-  { target: "v2-line21", start: 213, end: 219 },
-  { target: "v2-line22", start: 219, end: 226 },
-  { target: "v2-line23", start: 226, end: 232 },
-  { target: "v2-line24", start: 232, end: 239 },
-  { target: "v2-line25", start: 239, end: 246 },
-  { target: "v2-line26", start: 246, end: 247 },
-  { target: "v2-line27", start: 247, end: 253 },
-  { target: "v2-line28", start: 253, end: 272 }
-]);
+// タイムコードは歌詞配置後に追加する。
+const TENOR_TIMINGS = Object.freeze([]);
 
 const TRACKS = Object.freeze({
   chorus: { label: "合唱", src: "chorus.mp3" },
   soprano: { label: "ソプラノ", src: "soprano.mp3" },
   alto: { label: "アルト", src: "alto.mp3" },
-  tenor: { label: "テノール", src: "tenor-boost.mp3" },
+  tenor: { label: "テノール", src: "tenor.mp3" },
   piano: { label: "カラピアノ", src: "piano.mp3" }
 });
 
@@ -621,8 +558,8 @@ function clearLyricsState() {
   lyricsStage.querySelectorAll(".lyric-verse").forEach((verse) => {
     verse.hidden = true;
   });
-  lyricsStage.querySelectorAll(".lyric-line.is-visible, .lyric-line.is-active").forEach((line) => {
-    line.classList.remove("is-visible", "is-active");
+  lyricsStage.querySelectorAll(".lyric-line.is-active").forEach((line) => {
+    line.classList.remove("is-active");
   });
 }
 
@@ -630,25 +567,22 @@ function updateLyrics() {
   clearLyricsState();
   if (selectedTrackKey !== LYRIC_SYNC_TRACK) return;
 
+  if (TENOR_TIMINGS.length === 0) {
+    const firstVerse = lyricsStage.querySelector('.lyric-verse[data-verse="1"]');
+    if (firstVerse) firstVerse.hidden = false;
+    return;
+  }
+
   const current = audio.currentTime;
-  const verseNumber = current >= 90 ? "2" : "1";
-  const verse = lyricsStage.querySelector(`.lyric-verse[data-verse="${verseNumber}"]`);
+  const timing = TENOR_TIMINGS.find((item) => current >= item.start && current < item.end);
+  if (!timing) return;
+
+  const line = document.getElementById(timing.target);
+  if (!line) return;
+
+  const verse = line.closest(".lyric-verse");
   if (verse) verse.hidden = false;
-
-  const verseTimings = TENOR_TIMINGS.filter((item) => item.target.startsWith(`v${verseNumber}-`));
-  [0, 1].forEach((parity) => {
-    const timing = verseTimings.find((item) => {
-      const lineNumber = Number(item.target.slice(-2));
-      return lineNumber % 2 === parity && current < item.end;
-    });
-    if (!timing) return;
-
-    const line = document.getElementById(timing.target);
-    if (!line) return;
-
-    line.classList.add("is-visible");
-    if (current >= timing.start) line.classList.add("is-active");
-  });
+  line.classList.add("is-active");
 }
 
 function updatePlaybackView() {
