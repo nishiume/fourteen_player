@@ -151,6 +151,7 @@ button, input { -webkit-tap-highlight-color: transparent; }
   font-size: clamp(1.18rem, 5.2vw, 1.55rem);
   font-weight: 650;
   line-height: 1.55;
+  white-space: nowrap;
   opacity: 0;
   transform: translateY(8px);
   pointer-events: none;
@@ -347,6 +348,9 @@ button:disabled { cursor: not-allowed; opacity: 0.45; }
 
 @media (max-width: 360px) {
   .app-shell { padding-left: 14px; padding-right: 14px; }
+  .lyrics-stage { padding-left: 8px; padding-right: 8px; }
+  .lyric-line { font-size: clamp(0.76rem, 3.8vw, 1.35rem); }
+  #v2-line02 { font-size: clamp(0.76rem, 3.8vw, 1.35rem); }
   .track-grid { gap: 7px; }
   .track-button { min-height: 40px; padding: 8px 12px; font-size: 0.86rem; }
   .track-button[data-track="piano"] { font-size: 0.81rem; }
